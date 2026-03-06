@@ -1,6 +1,6 @@
 {
   "short_name": "Le Seul",
-  "name": "CMS Le Seul - Gestion Médicale",
+  "name": "cms Le Seul - Gestion Médicale",
   "icons": [
     {
       "src": "icon-192.png",
@@ -18,4 +18,5 @@
   "display": "standalone",
   "scope": "/",
   "theme_color": "#000000"
+
 }
