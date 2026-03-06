@@ -101,7 +101,10 @@ export const useStore = create<AppState>()(
       onValue(stateRef, (snapshot) => {
         const data = snapshot.val();
         if (data) {
-          set(data);
+          // Merge server state but NEVER overwrite local currentUser from server
+          // as currentUser is local to the device/browser session
+          const { currentUser: _, ...serverState } = data;
+          set(serverState);
         }
       });
 
@@ -121,9 +124,14 @@ export const useStore = create<AppState>()(
       setTimeout(() => {
         const state = get();
         if (state.currentUser && db) {
-          setupSessionListener(state.currentUser.id);
+          // IMPORTANT: Update session ID on Firebase to current sessionId 
+          // to prevent being kicked out by the previous session ID after a refresh
+          const userSessionRef = ref(db, `sessions/${state.currentUser.id}`);
+          dbSet(userSessionRef, sessionId).then(() => {
+            setupSessionListener(state.currentUser.id);
+          });
         }
-      }, 2000);
+      }, 1000);
 
       return {
         currentUser: null,
@@ -186,15 +194,8 @@ export const useStore = create<AppState>()(
           // Firebase Session Management (Kick logic)
           if (db) {
             const userSessionRef = ref(db, `sessions/${user.id}`);
-            dbSet(userSessionRef, sessionId);
-
-            // Listen for session changes (Kick)
-            onValue(userSessionRef, (snapshot) => {
-              const activeSessionId = snapshot.val();
-              if (activeSessionId && activeSessionId !== sessionId) {
-                get().logout();
-                alert('VOTRE SESSION A ÉTÉ OUVERTE SUR UN AUTRE APPAREIL. VOUS AVEZ ÉTÉ DÉCONNECTÉ.');
-              }
+            dbSet(userSessionRef, sessionId).then(() => {
+              setupSessionListener(user.id);
             });
           }
 
