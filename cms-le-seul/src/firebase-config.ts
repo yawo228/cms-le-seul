@@ -25,11 +25,12 @@ if (isFirebaseConfigured) {
     app = initializeApp(firebaseConfig);
     db = getDatabase(app);
     auth = getAuth(app);
+    console.log("✅ Firebase Initialisé avec succès pour le projet:", firebaseConfig.projectId);
   } catch (error) {
-    console.error("Firebase initialization failed:", error);
+    console.error("❌ Échec de l'initialisation Firebase:", error);
   }
 } else {
-  console.warn("Firebase is not configured. Real-time features are disabled. Please set VITE_FIREBASE_PROJECT_ID and VITE_FIREBASE_API_KEY in your environment.");
+  console.warn("⚠️ Firebase n'est pas configuré. Les clés VITE_FIREBASE_PROJECT_ID ou VITE_FIREBASE_API_KEY sont manquantes dans les variables d'environnement.");
 }
 
 // Null-safe wrappers for Firebase functions
