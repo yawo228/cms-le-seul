@@ -1,7 +1,0 @@
-{
-  "name": "CMS LE SEUL ",
-  "description": "Application PWA complète de gestion pour centre de santé avec scanner de code-barres.",
-  "requestFramePermissions": [
-    "camera"
-  ]
-}
