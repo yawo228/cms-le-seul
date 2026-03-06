@@ -120,13 +120,8 @@ export const useStore = create<AppState>()(
       // Re-establish listener if user is already logged in (from persist)
       setTimeout(() => {
         const state = get();
-        if (state.currentUser) {
-          if (db) {
-            console.log("🔄 Rétablissement de la surveillance de session pour:", state.currentUser.fullName);
-            setupSessionListener(state.currentUser.id);
-          } else {
-            console.warn("🚫 Impossible de surveiller la session : Firebase n'est pas connecté.");
-          }
+        if (state.currentUser && db) {
+          setupSessionListener(state.currentUser.id);
         }
       }, 2000);
 
@@ -190,7 +185,6 @@ export const useStore = create<AppState>()(
           
           // Firebase Session Management (Kick logic)
           if (db) {
-            console.log("📡 Enregistrement de la session Firebase pour:", user.fullName);
             const userSessionRef = ref(db, `sessions/${user.id}`);
             dbSet(userSessionRef, sessionId);
 
@@ -198,13 +192,10 @@ export const useStore = create<AppState>()(
             onValue(userSessionRef, (snapshot) => {
               const activeSessionId = snapshot.val();
               if (activeSessionId && activeSessionId !== sessionId) {
-                console.log("⚠️ Session écrasée par une nouvelle connexion !");
                 get().logout();
                 alert('VOTRE SESSION A ÉTÉ OUVERTE SUR UN AUTRE APPAREIL. VOUS AVEZ ÉTÉ DÉCONNECTÉ.');
               }
             });
-          } else {
-            console.warn("⚠️ Session locale uniquement : Firebase n'est pas configuré.");
           }
 
           // Sync users state
