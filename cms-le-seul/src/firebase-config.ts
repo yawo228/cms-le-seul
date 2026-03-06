@@ -25,7 +25,6 @@ if (isFirebaseConfigured) {
     app = initializeApp(firebaseConfig);
     db = getDatabase(app);
     auth = getAuth(app);
-    console.log("✅ Firebase Initialisé avec succès pour le projet:", firebaseConfig.projectId);
   } catch (error) {
     console.error("❌ Échec de l'initialisation Firebase:", error);
   }
