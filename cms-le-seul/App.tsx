@@ -197,6 +197,14 @@ const App: React.FC = () => {
               </div>
             )}
 
+            {/* Firebase Status Indicator */}
+            <div className="flex items-center justify-center gap-2 py-2">
+              <div className={`w-2 h-2 rounded-full ${import.meta.env.VITE_FIREBASE_PROJECT_ID ? 'bg-emerald-500 shadow-[0_0_8px_#10b981]' : 'bg-red-500 shadow-[0_0_8px_#ef4444]'} animate-pulse`} />
+              <span className="text-[8px] font-bold uppercase tracking-widest text-[var(--text-secondary)]">
+                {import.meta.env.VITE_FIREBASE_PROJECT_ID ? 'Cloud Sync Actif' : 'Mode Local (Hors-ligne)'}
+              </span>
+            </div>
+
             <button 
               type="submit" 
               style={{ backgroundColor: settings.loginButtonColor || 'var(--accent-color)' }}
