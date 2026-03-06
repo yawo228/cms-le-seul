@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, onValue, push, set, update } from "firebase/database";
-import { getAuth } from "firebase/auth";
+import { getAuth, signInAnonymously } from "firebase/auth";
 
 // Replace these with your actual Firebase project configuration
 const firebaseConfig = {
@@ -25,11 +25,21 @@ if (isFirebaseConfigured) {
     app = initializeApp(firebaseConfig);
     db = getDatabase(app);
     auth = getAuth(app);
+    
+    // Connexion anonyme automatique pour sécuriser l'accès
+    signInAnonymously(auth)
+      .then(() => {
+        console.log("🔒 Connexion sécurisée établie avec Firebase");
+      })
+      .catch((error) => {
+        console.error("❌ Erreur d'authentification Firebase:", error);
+      });
+
   } catch (error) {
     console.error("❌ Échec de l'initialisation Firebase:", error);
   }
 } else {
-  console.warn("⚠️ Firebase n'est pas configuré. Les clés VITE_FIREBASE_PROJECT_ID ou VITE_FIREBASE_API_KEY sont manquantes dans les variables d'environnement.");
+  console.warn("⚠️ Firebase n'est pas configuré. Les clés VITE_FIREBASE_PROJECT_ID ou VITE_FIREBASE_API_KEY sont manquantes.");
 }
 
 // Null-safe wrappers for Firebase functions
