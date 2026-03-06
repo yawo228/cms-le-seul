@@ -1,0 +1,150 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>CMS LE SEUL - Gestion Médicale Pro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            royal: '#0056b3',
+            magenta: '#ff4d6d',
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          animation: {
+            'slide-up': 'slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+            'fade-in': 'fadeIn 0.3s ease-out',
+            'scale-in': 'scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
+            'staggered-fade': 'fadeIn 0.5s ease-out forwards',
+            'bounce-subtle': 'bounceSubtle 0.3s ease-in-out',
+            'pulse-fast': 'pulseFast 0.2s ease-in-out 2',
+            'scan-laser': 'scanLaser 2s linear infinite',
+            'blink-frame': 'blinkFrame 1s ease-in-out infinite',
+          },
+          keyframes: {
+            slideUp: {
+              '0%': { transform: 'translateY(15px)', opacity: '0' },
+              '100%': { transform: 'translateY(0)', opacity: '1' },
+            },
+            fadeIn: {
+              '0%': { opacity: '0' },
+              '100%': { opacity: '1' },
+            },
+            scaleIn: {
+              '0%': { transform: 'scale(0.9)', opacity: '0' },
+              '100%': { transform: 'scale(1)', opacity: '1' },
+            },
+            bounceSubtle: {
+              '0%, 100%': { transform: 'scale(1)' },
+              '50%': { transform: 'scale(0.95)' },
+            },
+            pulseFast: {
+              '0%, 100%': { transform: 'scale(1)' },
+              '50%': { transform: 'scale(1.15)' },
+            },
+            scanLaser: {
+              '0%': { top: '0%' },
+              '100%': { top: '100%' },
+            },
+            blinkFrame: {
+              '0%, 100%': { opacity: '1', transform: 'scale(1)' },
+              '50%': { opacity: '0.6', transform: 'scale(1.02)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --royal: #0056b3;
+      --magenta: #ff4d6d;
+    }
+    
+    body { 
+      font-family: 'Inter', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      font-size: 14px;
+      overflow-x: hidden;
+    }
+    
+    .dark body {
+      background-color: #0f172a;
+      color: #f8fafc;
+    }
+
+    /* Scrollbar ultra-fine */
+    ::-webkit-scrollbar {
+      width: 3px;
+      height: 3px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f8fafc;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 10px;
+    }
+
+    .thermal-paper {
+      font-family: 'Courier New', Courier, monospace;
+      background: #fff;
+      color: #000;
+      padding: 10px;
+      line-height: 1;
+    }
+    
+    @media print {
+      .no-print { display: none !important; }
+      body { background: white; }
+    }
+
+    /* Utilitaires pour le décalage des animations (stagger) */
+    .stagger-1 { animation-delay: 50ms; }
+    .stagger-2 { animation-delay: 100ms; }
+    .stagger-3 { animation-delay: 150ms; }
+    .stagger-4 { animation-delay: 200ms; }
+    .stagger-5 { animation-delay: 250ms; }
+    .stagger-6 { animation-delay: 300ms; }
+    .stagger-7 { animation-delay: 350ms; }
+    .stagger-8 { animation-delay: 400ms; }
+
+    /* Empêcher le défilement horizontal lors des animations de sortie */
+    #root {
+      width: 100%;
+      overflow-x: hidden;
+    }
+  </style>
+<script type="importmap">
+{
+  "imports": {
+    "recharts": "https://esm.sh/recharts@^3.7.0",
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "zustand/": "https://esm.sh/zustand@^5.0.10/",
+    "zustand": "https://esm.sh/zustand@^5.0.10"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0056b3">
+  <link rel="icon" type="image/png" href="/icon-192.png">
+</head>
+<body class="bg-slate-50 text-slate-900 overflow-x-hidden antialiased select-none">
+  <div id="root"></div>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
