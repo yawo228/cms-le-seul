@@ -6,7 +6,7 @@ import TicketModal from '../Common/TicketModal';
 import PatientSelector from '../Common/PatientSelector';
 
 const NursingModule: React.FC = () => {
-  const { careActs, practitioners, createTicket, currentUser } = useStore();
+  const { careActs, practitioners, createTicket, currentUser, settings } = useStore();
   const [selectedAct, setSelectedAct] = useState<CareAct | null>(null);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [practitioner, setPractitioner] = useState('');
@@ -127,6 +127,7 @@ const NursingModule: React.FC = () => {
           <PatientSelector 
             selectedPatientId={selectedPatient?.id} 
             onSelect={setSelectedPatient} 
+            theme={settings.theme}
           />
 
           <div>
