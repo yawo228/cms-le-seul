@@ -6,7 +6,7 @@ import PatientSelector from '../Common/PatientSelector';
 import TicketModal from '../Common/TicketModal';
 
 const LaboratoryModule: React.FC = () => {
-  const { labExams, createTicket, currentUser } = useStore();
+  const { labExams, createTicket, currentUser, settings } = useStore();
   const [search, setSearch] = useState('');
   const [selectedExams, setSelectedExams] = useState<LabExam[]>([]);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
@@ -171,6 +171,7 @@ const LaboratoryModule: React.FC = () => {
               <PatientSelector 
                 selectedPatientId={selectedPatient?.id} 
                 onSelect={setSelectedPatient} 
+                theme={settings.theme}
               />
               
               <div className="bg-[var(--bg-secondary)] rounded-2xl p-2 shadow-sm border border-[var(--border-color)] space-y-1">
