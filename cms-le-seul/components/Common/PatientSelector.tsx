@@ -86,7 +86,7 @@ const PatientSelector: React.FC<PatientSelectorProps> = ({
           className={`w-full pl-10 pr-10 py-2.5 rounded-xl font-bold uppercase text-xs transition-all outline-none border ${
             isLight 
               ? 'bg-slate-100 border-slate-200 text-slate-800 placeholder-slate-400 focus:border-indigo-500 focus:bg-white' 
-              : 'glass-input placeholder-white/30 text-white border-transparent'
+              : 'bg-white/5 placeholder-white/30 text-white border-white/10 focus:border-indigo-500 focus:bg-white/10'
           } ${selectedPatient ? (isLight ? 'border-indigo-500 bg-indigo-50 text-indigo-700' : 'border-indigo-500/50 text-indigo-300 bg-indigo-500/10') : ''}`}
           placeholder="RECHERCHER OU CRÉER..."
           value={selectedPatient ? `${selectedPatient.nom} ${selectedPatient.prenom}` : searchTerm}
@@ -160,26 +160,26 @@ const PatientSelector: React.FC<PatientSelectorProps> = ({
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <input 
-                  className={`p-2 rounded-lg text-[10px] font-bold uppercase outline-none border ${isLight ? 'bg-white border-slate-200 text-slate-800 placeholder-slate-400' : 'glass-input border-transparent text-white placeholder-white/30'}`} 
+                  className={`p-2 rounded-lg text-[10px] font-bold uppercase outline-none border ${isLight ? 'bg-white border-slate-200 text-slate-800 placeholder-slate-400' : 'bg-white/5 border-white/10 text-white placeholder-white/30 focus:border-indigo-500'}`} 
                   placeholder="NOM"
                   value={newPatient.nom}
                   onChange={e => setNewPatient({...newPatient, nom: e.target.value.toUpperCase()})}
                 />
                 <input 
-                  className={`p-2 rounded-lg text-[10px] font-bold uppercase outline-none border ${isLight ? 'bg-white border-slate-200 text-slate-800 placeholder-slate-400' : 'glass-input border-transparent text-white placeholder-white/30'}`} 
+                  className={`p-2 rounded-lg text-[10px] font-bold uppercase outline-none border ${isLight ? 'bg-white border-slate-200 text-slate-800 placeholder-slate-400' : 'bg-white/5 border-white/10 text-white placeholder-white/30 focus:border-indigo-500'}`} 
                   placeholder="PRÉNOM"
                   value={newPatient.prenom}
                   onChange={e => setNewPatient({...newPatient, prenom: e.target.value})}
                 />
                 <input 
                   type="number"
-                  className={`p-2 rounded-lg text-[10px] font-bold uppercase outline-none border ${isLight ? 'bg-white border-slate-200 text-slate-800 placeholder-slate-400' : 'glass-input border-transparent text-white placeholder-white/30'}`} 
+                  className={`p-2 rounded-lg text-[10px] font-bold uppercase outline-none border ${isLight ? 'bg-white border-slate-200 text-slate-800 placeholder-slate-400' : 'bg-white/5 border-white/10 text-white placeholder-white/30 focus:border-indigo-500'}`} 
                   placeholder="AGE"
                   value={newPatient.age || ''}
                   onChange={e => setNewPatient({...newPatient, age: Number(e.target.value)})}
                 />
                 <select 
-                  className={`p-2 rounded-lg text-[10px] font-bold uppercase appearance-none outline-none border ${isLight ? 'bg-white border-slate-200 text-slate-800' : 'glass-input border-transparent text-white'}`}
+                  className={`p-2 rounded-lg text-[10px] font-bold uppercase appearance-none outline-none border ${isLight ? 'bg-white border-slate-200 text-slate-800' : 'bg-white/5 border-white/10 text-white focus:border-indigo-500'}`}
                   value={newPatient.sexe}
                   onChange={e => setNewPatient({...newPatient, sexe: e.target.value as 'M' | 'F'})}
                 >
@@ -187,7 +187,7 @@ const PatientSelector: React.FC<PatientSelectorProps> = ({
                   <option value="F" className={isLight ? 'bg-white text-slate-800' : 'bg-slate-900 text-white'}>FEMME</option>
                 </select>
                 <input 
-                  className={`col-span-2 p-2 rounded-lg text-[10px] font-bold uppercase outline-none border ${isLight ? 'bg-white border-slate-200 text-slate-800 placeholder-slate-400' : 'glass-input border-transparent text-white placeholder-white/30'}`} 
+                  className={`col-span-2 p-2 rounded-lg text-[10px] font-bold uppercase outline-none border ${isLight ? 'bg-white border-slate-200 text-slate-800 placeholder-slate-400' : 'bg-white/5 border-white/10 text-white placeholder-white/30 focus:border-indigo-500'}`} 
                   placeholder="TÉLÉPHONE"
                   value={newPatient.telephone}
                   onChange={e => setNewPatient({...newPatient, telephone: e.target.value})}
