@@ -15,6 +15,8 @@ const StockModule: React.FC = () => {
   const [adjustType, setAdjustType] = useState<'ACHAT' | 'CORRECTION' | 'INVENTAIRE'>('ACHAT');
   const [description, setDescription] = useState('');
   const [mode, setMode] = useState<'ACHAT' | 'AJUSTEMENT'>('ACHAT');
+  const [expiryDate, setExpiryDate] = useState('');
+  const [lotNumber, setLotNumber] = useState('');
 
   const isAdmin = currentUser?.role === UserRole.ADMIN;
 
@@ -70,7 +72,11 @@ const StockModule: React.FC = () => {
         alert('La quantité d\'achat doit être supérieure à 0');
         return;
       }
-      adjustStock(selectedMed.id, adjustQty, 'ACHAT', { description: 'Entrée en stock par achat' });
+      adjustStock(selectedMed.id, adjustQty, 'ACHAT', { 
+        description: 'Entrée en stock par achat',
+        dateExpiration: expiryDate || undefined,
+        lotNumber: lotNumber || undefined
+      });
     } else {
       if (!description.trim()) {
         alert('Une description est obligatoire pour un ajustement');
@@ -82,6 +88,8 @@ const StockModule: React.FC = () => {
     setSelectedMed(null);
     setAdjustQty(0);
     setDescription('');
+    setExpiryDate('');
+    setLotNumber('');
   };
 
   return (
@@ -212,6 +220,30 @@ const StockModule: React.FC = () => {
                   onChange={(e) => setAdjustQty(Number(e.target.value))} 
                 />
               </div>
+
+              {mode === 'ACHAT' && (
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <p className="text-[10px] font-black text-[var(--text-secondary)] uppercase tracking-widest ml-1">Date d'Expiration</p>
+                    <input 
+                      type="date" 
+                      className="w-full p-4 bg-[var(--bg-primary)] rounded-2xl font-bold text-xs outline-none border-2 border-transparent focus:border-emerald-500 transition-all text-[var(--text-primary)]"
+                      value={expiryDate}
+                      onChange={(e) => setExpiryDate(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <p className="text-[10px] font-black text-[var(--text-secondary)] uppercase tracking-widest ml-1">N° de Lot</p>
+                    <input 
+                      type="text" 
+                      placeholder="LOT..."
+                      className="w-full p-4 bg-[var(--bg-primary)] rounded-2xl font-bold text-xs outline-none border-2 border-transparent focus:border-emerald-500 transition-all text-[var(--text-primary)] uppercase"
+                      value={lotNumber}
+                      onChange={(e) => setLotNumber(e.target.value)}
+                    />
+                  </div>
+                </div>
+              )}
 
               {mode === 'AJUSTEMENT' && (
                 <div className="space-y-2">
