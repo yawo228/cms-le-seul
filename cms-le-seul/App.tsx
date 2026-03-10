@@ -22,7 +22,7 @@ import ConsumablesModule from './components/Consumables/ConsumablesModule';
 import AuditModule from './components/Admin/AuditModule';
 
 const App: React.FC = () => {
-  const { currentUser, login, logout, initializeDemoData, users, settings, updateUser, medicaments } = useStore();
+  const { currentUser, login, logout, initializeDemoData, users, settings, updateUser, medicaments, hasLoadedFromFirebase } = useStore();
   const [activeTab, setActiveTab] = useState('home');
   const [isSidebarOpen, setSidebarOpen] = useState(false);
 
@@ -59,12 +59,12 @@ const App: React.FC = () => {
   const [showCameraSelection, setShowCameraSelection] = useState(false);
 
   useEffect(() => {
-    // Initialize if no users OR if medicaments list is empty or very short
-    const isDataEmpty = users.length === 0 || medicaments.length < 5;
-    if (isDataEmpty) {
+    // ONLY initialize if Firebase has loaded AND it's truly empty
+    if (hasLoadedFromFirebase && users.length === 0 && medicaments.length < 5) {
+      console.log("Initializing demo data because Firebase is empty...");
       initializeDemoData();
     }
-  }, [users.length, medicaments.length, initializeDemoData]);
+  }, [hasLoadedFromFirebase, users.length, medicaments.length, initializeDemoData]);
 
   useEffect(() => {
     if (currentUser && !currentUser.hasConfiguredCamera) {
