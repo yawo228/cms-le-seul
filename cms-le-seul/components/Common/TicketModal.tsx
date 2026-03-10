@@ -6,6 +6,7 @@ import { Ticket } from '../../types';
 import { useStore } from '../../store/useStore';
 import PrintableTicket from './PrintableTicket';
 import PrintableA5 from './PrintableA5';
+import PrintableMoneyReceipt from './PrintableMoneyReceipt';
 
 interface TicketModalProps {
   ticket: Ticket;
@@ -14,7 +15,7 @@ interface TicketModalProps {
 
 const TicketModal: React.FC<TicketModalProps> = ({ ticket, onClose }) => {
   const { settings } = useStore();
-  const [viewMode, setViewMode] = useState<'TICKET' | 'A5'>('TICKET');
+  const [viewMode, setViewMode] = useState<'TICKET' | 'MONEY'>('MONEY');
   const contentRef = useRef<HTMLDivElement>(null);
 
   const handlePrint = useReactToPrint({
@@ -40,18 +41,18 @@ const TicketModal: React.FC<TicketModalProps> = ({ ticket, onClose }) => {
           {/* Format Selector - Segmented Control */}
           <div className="flex bg-[var(--bg-primary)] p-1.5 rounded-2xl w-full sm:w-auto border border-[var(--border-color)]">
             <button 
+              onClick={() => setViewMode('MONEY')}
+              className={`flex-1 sm:flex-none px-6 py-2.5 rounded-xl transition-all flex items-center justify-center gap-2 font-black text-[10px] uppercase tracking-widest ${viewMode === 'MONEY' ? 'bg-royal text-white shadow-md' : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'}`}
+            >
+              <Receipt size={16} />
+              <span>Reçu</span>
+            </button>
+            <button 
               onClick={() => setViewMode('TICKET')}
               className={`flex-1 sm:flex-none px-6 py-2.5 rounded-xl transition-all flex items-center justify-center gap-2 font-black text-[10px] uppercase tracking-widest ${viewMode === 'TICKET' ? 'bg-royal text-white shadow-md' : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'}`}
             >
               <Receipt size={16} />
               <span>Ticket</span>
-            </button>
-            <button 
-              onClick={() => setViewMode('A5')}
-              className={`flex-1 sm:flex-none px-6 py-2.5 rounded-xl transition-all flex items-center justify-center gap-2 font-black text-[10px] uppercase tracking-widest ${viewMode === 'A5' ? 'bg-royal text-white shadow-md' : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'}`}
-            >
-              <FileText size={16} />
-              <span>Format A5</span>
             </button>
           </div>
 
@@ -62,11 +63,11 @@ const TicketModal: React.FC<TicketModalProps> = ({ ticket, onClose }) => {
 
         {/* Preview Area */}
         <div className="p-8 overflow-y-auto max-h-[70vh] bg-[var(--bg-primary)]/30 flex justify-center print:p-0 print:overflow-visible print:max-h-none print:bg-white">
-          <div ref={contentRef} className={`bg-white shadow-2xl border border-[var(--border-color)] ${viewMode === 'TICKET' ? 'w-[72mm]' : 'w-[148mm]'} print:shadow-none print:border-none print:w-full transition-all duration-500`}>
-            {viewMode === 'TICKET' ? (
-              <PrintableTicket ticket={ticket} />
+          <div ref={contentRef} className={`bg-white shadow-2xl border border-[var(--border-color)] ${viewMode === 'TICKET' ? 'w-[72mm]' : 'w-[210mm]'} print:shadow-none print:border-none print:w-full transition-all duration-500`}>
+            {viewMode === 'MONEY' ? (
+              <PrintableMoneyReceipt tickets={[ticket]} />
             ) : (
-              <PrintableA5 ticket={ticket} />
+              <PrintableTicket ticket={ticket} />
             )}
           </div>
         </div>
