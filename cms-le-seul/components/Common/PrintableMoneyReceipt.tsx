@@ -7,10 +7,10 @@ interface MoneyReceiptProps {
   patient?: Patient;
 }
 
-const PrintableMoneyReceipt: React.FC<MoneyReceiptProps> = ({ tickets, patient }) => {
+const PrintableMoneyReceipt: React.FC<MoneyReceiptProps> = ({ tickets = [], patient }) => {
   const { settings } = useStore();
   
-  const totalAmount = tickets.reduce((acc, t) => acc + t.netAPayer, 0);
+  const totalAmount = (tickets || []).reduce((acc, t) => acc + t.netAPayer, 0);
   const firstTicket = tickets[0];
   const date = firstTicket ? new Date(firstTicket.date).toLocaleDateString('fr-FR') : new Date().toLocaleDateString('fr-FR');
   const ticketNumbers = tickets.map(t => t.numero).join(', ');
