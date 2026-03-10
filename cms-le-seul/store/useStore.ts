@@ -77,6 +77,7 @@ interface AppState {
   
   cashSessions: CashSession[];
   auditLogs: AuditLog[];
+  hasLoadedFromFirebase: boolean;
 
   // Session Management
   openSession: (openingAmount: number) => { success: boolean, message?: string };
@@ -105,7 +106,9 @@ export const useStore = create<AppState>()(
           // Merge server state but NEVER overwrite local currentUser from server
           // as currentUser is local to the device/browser session
           const { currentUser: _, ...serverState } = data;
-          set(serverState);
+          set({ ...serverState, hasLoadedFromFirebase: true });
+        } else {
+          set({ hasLoadedFromFirebase: true });
         }
       });
 
@@ -133,6 +136,7 @@ export const useStore = create<AppState>()(
 
       return {
         currentUser: null,
+        hasLoadedFromFirebase: false,
       users: [],
       medicaments: [],
       medicamentCategories: [],
@@ -645,7 +649,7 @@ export const useStore = create<AppState>()(
 
         // Calculate theoretical amount
         // Opening + Sales - Disbursements
-        const totalDisbursements = activeSession.disbursements.reduce((acc, d) => acc + d.amount, 0);
+        const totalDisbursements = (activeSession.disbursements || []).reduce((acc, d) => acc + d.amount, 0);
         
         // Calculate sales for this session
         // Filter tickets paid during this session time window by this cashier
@@ -705,7 +709,7 @@ export const useStore = create<AppState>()(
 
         const updatedSession = {
           ...activeSession,
-          disbursements: [...activeSession.disbursements, newDisbursement]
+          disbursements: [...(activeSession.disbursements || []), newDisbursement]
         };
 
         const newState = {
@@ -751,7 +755,7 @@ export const useStore = create<AppState>()(
         if (!session || session.status !== 'OPEN') return;
 
         // Calculate current balance
-        const totalDisbursements = session.disbursements.reduce((acc, d) => acc + d.amount, 0);
+        const totalDisbursements = (session.disbursements || []).reduce((acc, d) => acc + d.amount, 0);
         const sessionSales = state.tickets
           .filter(t => 
             t.statut === 'PAID' && 
@@ -774,7 +778,7 @@ export const useStore = create<AppState>()(
 
         const updatedSession = {
           ...session,
-          disbursements: [...session.disbursements, newDisbursement]
+          disbursements: [...(session.disbursements || []), newDisbursement]
         };
 
         const newState = {
@@ -802,7 +806,7 @@ export const useStore = create<AppState>()(
          const session = state.cashSessions.find(s => s.id === sessionId);
          if (!session || session.status !== 'OPEN') return;
 
-         const totalDisbursements = session.disbursements.reduce((acc, d) => acc + d.amount, 0);
+         const totalDisbursements = (session.disbursements || []).reduce((acc, d) => acc + d.amount, 0);
          const sessionSales = state.tickets
            .filter(t => 
              t.statut === 'PAID' && 
@@ -826,7 +830,7 @@ export const useStore = create<AppState>()(
  
          const updatedSession = {
            ...session,
-           disbursements: [...session.disbursements, newDisbursement]
+           disbursements: [...(session.disbursements || []), newDisbursement]
          };
  
          const newState = {
