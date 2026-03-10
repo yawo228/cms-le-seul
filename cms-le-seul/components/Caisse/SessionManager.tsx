@@ -26,6 +26,25 @@ const SessionManager: React.FC<SessionManagerProps> = ({ children }) => {
     [cashSessions]
   );
 
+  // Calculate current stats for the active session
+  const currentSessionStats = useMemo(() => {
+    if (!activeSession) return null;
+    
+    const totalDisbursements = activeSession.disbursements.reduce((acc, d) => acc + d.amount, 0);
+    
+    const sessionSales = tickets
+      .filter(t => 
+        t.statut === 'PAID' && 
+        t.caissierId === activeSession.cashierId && 
+        new Date(t.date) >= new Date(activeSession.startTime)
+      )
+      .reduce((acc, t) => acc + (t.montantRecu || 0), 0);
+
+    const theoretical = activeSession.openingAmount + sessionSales - totalDisbursements;
+
+    return { sessionSales, totalDisbursements, theoretical };
+  }, [activeSession, tickets]);
+
   const isMySession = activeSession?.cashierId === currentUser?.id;
   const isAdmin = currentUser?.role === UserRole.ADMIN;
 
@@ -108,25 +127,6 @@ const SessionManager: React.FC<SessionManagerProps> = ({ children }) => {
 
   // 3. ACTIVE SESSION DASHBOARD (Wrapper)
   
-  // Calculate current stats for the active session
-  const currentSessionStats = useMemo(() => {
-    if (!activeSession) return null;
-    
-    const totalDisbursements = activeSession.disbursements.reduce((acc, d) => acc + d.amount, 0);
-    
-    const sessionSales = tickets
-      .filter(t => 
-        t.statut === 'PAID' && 
-        t.caissierId === activeSession.cashierId && 
-        new Date(t.date) >= new Date(activeSession.startTime)
-      )
-      .reduce((acc, t) => acc + (t.montantRecu || 0), 0);
-
-    const theoretical = activeSession.openingAmount + sessionSales - totalDisbursements;
-
-    return { sessionSales, totalDisbursements, theoretical };
-  }, [activeSession, tickets]);
-
   const handleCloseSession = () => {
     if (!closingAmount) return;
     closeSession(Number(closingAmount));
