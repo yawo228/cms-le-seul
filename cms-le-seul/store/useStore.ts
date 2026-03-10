@@ -125,12 +125,9 @@ export const useStore = create<AppState>()(
       setTimeout(() => {
         const state = get();
         if (state.currentUser && db) {
-          // IMPORTANT: Update session ID on Firebase to current sessionId 
-          // to prevent being kicked out by the previous session ID after a refresh
+          // Sync user session ID if needed, but we removed the kick logic
           const userSessionRef = ref(db, `sessions/${state.currentUser.id}`);
-          dbSet(userSessionRef, sessionId).then(() => {
-            setupSessionListener(state.currentUser.id);
-          });
+          dbSet(userSessionRef, sessionId);
         }
       }, 1000);
 
@@ -192,12 +189,10 @@ export const useStore = create<AppState>()(
           const updatedUsers = [...state.users];
           updatedUsers[userIndex] = { ...user, isLoggedIn: true };
           
-          // Firebase Session Management (Kick logic)
+          // Firebase Session Management
           if (db) {
             const userSessionRef = ref(db, `sessions/${user.id}`);
-            dbSet(userSessionRef, sessionId).then(() => {
-              setupSessionListener(user.id);
-            });
+            dbSet(userSessionRef, sessionId);
           }
 
           // Sync users state
