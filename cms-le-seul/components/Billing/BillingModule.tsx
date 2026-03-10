@@ -9,6 +9,7 @@ import { Ticket, AssuranceType, TransactionItem, UserRole, Patient } from '../..
 import { useReactToPrint } from 'react-to-print';
 import PrintableTicket from '../Common/PrintableTicket';
 import PrintableA5 from '../Common/PrintableA5';
+import PrintableMoneyReceipt from '../Common/PrintableMoneyReceipt';
 
 const getTicketTypeLabel = (type: string) => {
   switch (type) {
@@ -27,7 +28,8 @@ const BillingModule: React.FC = () => {
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
   const [showPrintModal, setShowPrintModal] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [printFormat, setPrintFormat] = useState<'A5' | 'TICKET'>('A5');
+  const [printFormat, setPrintFormat] = useState<'TICKET' | 'MONEY'>('MONEY');
+  const [selectedTicketIds, setSelectedTicketIds] = useState<string[]>([]);
 
   const printRef = useRef<HTMLDivElement>(null);
   const handlePrint = useReactToPrint({
@@ -65,6 +67,25 @@ const BillingModule: React.FC = () => {
     setShowPrintModal(true);
   };
 
+  const selectedTickets = useMemo(() => {
+    if (selectedTicketIds.length > 0) {
+      return tickets.filter(t => selectedTicketIds.includes(t.id));
+    }
+    if (selectedTicket) return [selectedTicket];
+    return [];
+  }, [tickets, selectedTicketIds, selectedTicket]);
+
+  const toggleTicketSelection = (id: string) => {
+    setSelectedTicketIds(prev => 
+      prev.includes(id) ? prev.filter(tid => tid !== id) : [...prev, id]
+    );
+  };
+
+  const handlePrintSelected = () => {
+    if (selectedTicketIds.length === 0) return;
+    setShowPrintModal(true);
+  };
+
   return (
     <div className="space-y-6 animate-fade-in text-[var(--text-primary)] pb-20">
       {/* Header */}
@@ -75,6 +96,15 @@ const BillingModule: React.FC = () => {
         </div>
 
         <div className="flex bg-[var(--bg-secondary)] p-1 rounded-2xl border border-[var(--border-color)]">
+          {selectedTicketIds.length > 0 && (
+            <button 
+              onClick={handlePrintSelected}
+              className="px-6 py-3 bg-blue-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all mr-2 flex items-center gap-2 shadow-lg shadow-blue-600/20"
+            >
+              <Printer size={14} />
+              Imprimer Sélection ({selectedTicketIds.length})
+            </button>
+          )}
           <button 
             onClick={() => setActiveTab('ALL')}
             className={`px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'ALL' ? 'bg-[var(--accent-color)] text-white shadow-lg shadow-[var(--accent-color)]/20' : 'text-[var(--text-secondary)] hover:text-white'}`}
@@ -118,6 +148,20 @@ const BillingModule: React.FC = () => {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-[var(--bg-primary)] border-b border-[var(--border-color)]">
+                <th className="p-4 w-10">
+                  <input 
+                    type="checkbox" 
+                    className="rounded border-[var(--border-color)] bg-transparent"
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSelectedTicketIds(filteredTickets.map(t => t.id));
+                      } else {
+                        setSelectedTicketIds([]);
+                      }
+                    }}
+                    checked={selectedTicketIds.length === filteredTickets.length && filteredTickets.length > 0}
+                  />
+                </th>
                 <th className="p-4 text-[10px] font-black text-[var(--text-secondary)] uppercase tracking-widest">Date</th>
                 <th className="p-4 text-[10px] font-black text-[var(--text-secondary)] uppercase tracking-widest">N° Doc</th>
                 <th className="p-4 text-[10px] font-black text-[var(--text-secondary)] uppercase tracking-widest">Patient</th>
@@ -130,6 +174,14 @@ const BillingModule: React.FC = () => {
             <tbody className="divide-y divide-[var(--border-color)]">
               {filteredTickets.map(ticket => (
                 <tr key={ticket.id} className="hover:bg-white/5 transition-colors group">
+                  <td className="p-4">
+                    <input 
+                      type="checkbox" 
+                      className="rounded border-[var(--border-color)] bg-transparent"
+                      checked={selectedTicketIds.includes(ticket.id)}
+                      onChange={() => toggleTicketSelection(ticket.id)}
+                    />
+                  </td>
                   <td className="p-4 text-xs font-bold text-[var(--text-primary)] whitespace-nowrap">
                     {new Date(ticket.date).toLocaleDateString('fr-FR')}
                   </td>
@@ -311,15 +363,15 @@ const BillingModule: React.FC = () => {
                 </div>
                 <div className="flex bg-[var(--bg-primary)] p-1 rounded-xl md:rounded-2xl border border-[var(--border-color)] shadow-xl w-full md:w-auto">
                   <button 
-                    onClick={() => setPrintFormat('A5')}
-                    className={`flex-1 md:flex-none px-4 md:px-6 py-2 md:py-3 rounded-lg md:rounded-xl text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-2 ${printFormat === 'A5' ? 'bg-[var(--accent-color)] text-white shadow-lg scale-105' : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--accent-color)]/5'}`}
+                    onClick={() => setPrintFormat('MONEY')}
+                    className={`flex-1 md:flex-none px-4 md:px-6 py-2 md:py-3 rounded-lg md:rounded-xl text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-2 ${printFormat === 'MONEY' ? 'bg-[var(--accent-color)] text-white shadow-lg scale-105' : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--accent-color)]/5'}`}
                   >
-                    <FileText size={14} />
-                    <span>A5</span>
+                    <DollarSign size={14} />
+                    <span>Reçu</span>
                   </button>
                   <button 
                     onClick={() => setPrintFormat('TICKET')}
-                    className={`flex-1 md:flex-none px-4 md:px-6 py-2 md:py-3 rounded-lg md:rounded-xl text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-2 ${printFormat === 'TICKET' ? 'bg-[var(--accent-color)] text-white shadow-lg scale-105' : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--accent-color)]/5'}`}
+                    className={`flex-1 md:flex-none px-4 md:px-6 py-2 md:py-3 rounded-lg md:rounded-xl text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-2 ${printFormat === 'TICKET' ? 'bg-[var(--accent-color)] text-white shadow-lg scale-105' : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'}`}
                   >
                     <ScanLine size={14} />
                     <span>Ticket</span>
@@ -339,10 +391,10 @@ const BillingModule: React.FC = () => {
 
             <div className="flex-1 overflow-y-auto p-4 md:p-12 bg-slate-200/50 flex justify-center custom-scrollbar">
               <div ref={printRef} className="shadow-2xl bg-white origin-top transition-transform scale-[0.85] sm:scale-100">
-                {printFormat === 'A5' ? (
-                  <PrintableA5 ticket={selectedTicket} />
+                {printFormat === 'MONEY' ? (
+                  <PrintableMoneyReceipt tickets={selectedTickets} />
                 ) : (
-                  <PrintableTicket ticket={selectedTicket} />
+                  <PrintableTicket ticket={selectedTickets[0]} />
                 )}
               </div>
             </div>
