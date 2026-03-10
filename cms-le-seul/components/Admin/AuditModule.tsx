@@ -110,7 +110,7 @@ const AuditModule: React.FC = () => {
               </thead>
               <tbody className="divide-y divide-[var(--border-color)]">
                 {filteredSessions.map(session => {
-                  const totalDisbursements = session.disbursements.reduce((acc, d) => acc + d.amount, 0);
+                  const totalDisbursements = (session.disbursements || []).reduce((acc, d) => acc + d.amount, 0);
                   const gap = session.status === 'CLOSED' && session.closingAmount !== undefined && session.theoreticalClosingAmount !== undefined
                     ? session.closingAmount - session.theoreticalClosingAmount
                     : 0;
