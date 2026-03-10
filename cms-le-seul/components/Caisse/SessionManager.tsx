@@ -30,7 +30,7 @@ const SessionManager: React.FC<SessionManagerProps> = ({ children }) => {
   const currentSessionStats = useMemo(() => {
     if (!activeSession) return null;
     
-    const totalDisbursements = activeSession.disbursements.reduce((acc, d) => acc + d.amount, 0);
+    const totalDisbursements = (activeSession.disbursements || []).reduce((acc, d) => acc + d.amount, 0);
     
     const sessionSales = tickets
       .filter(t => 
