@@ -164,9 +164,15 @@
   }
   /* Print Styles */
   @media print {
+    @page {
+      margin: 0;
+      size: auto;
+    }
     body {
       background: white !important;
       color: black !important;
+      margin: 0 !important;
+      padding: 0 !important;
     }
     .no-print {
       display: none !important;
@@ -182,6 +188,13 @@
       width: 100%;
       margin: 0;
       padding: 0;
+    }
+    /* Ensure content is centered if smaller than page */
+    .print-content {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      width: 100%;
     }
   }
 }
