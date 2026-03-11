@@ -7,8 +7,8 @@ const PrintableTicket = ({ ticket }: { ticket: Ticket }) => {
   const isPaid = ticket.statut === 'PAID';
   
   return (
-    <div className="p-2 max-w-[72mm] mx-auto !text-black font-sans text-[10px] leading-tight relative bg-white print:p-0 print:max-w-none">
-      <div className="text-center mb-3">
+    <div className="p-8 max-w-[72mm] mx-auto !text-black font-sans text-[10px] leading-tight relative bg-white print:p-10 print:w-[72mm] print:mx-auto print:shadow-none">
+      <div className="text-center mb-4">
         {settings.logoUrl ? (
             <img src={settings.logoUrl} alt="Logo" className="h-10 mx-auto mb-1.5 object-contain grayscale print:grayscale-0" />
         ) : (
