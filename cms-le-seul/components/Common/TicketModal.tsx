@@ -15,7 +15,7 @@ interface TicketModalProps {
 
 const TicketModal: React.FC<TicketModalProps> = ({ ticket, onClose }) => {
   const { settings } = useStore();
-  const [viewMode] = useState<'TICKET' | 'MONEY'>('TICKET');
+  const [printFormat, setPrintFormat] = useState<'TICKET'>('TICKET');
   const contentRef = useRef<HTMLDivElement>(null);
 
   const handlePrint = useReactToPrint({
@@ -45,7 +45,7 @@ const TicketModal: React.FC<TicketModalProps> = ({ ticket, onClose }) => {
 
         {/* Preview Area */}
         <div className="p-8 overflow-y-auto max-h-[70vh] bg-[var(--bg-primary)]/30 flex justify-center print:p-0 print:overflow-visible print:max-h-none print:bg-white">
-          <div ref={contentRef} className="bg-white shadow-2xl border border-[var(--border-color)] w-[72mm] print:shadow-none print:border-none print:w-full transition-all duration-500">
+          <div ref={contentRef} className="bg-white shadow-2xl border border-[var(--border-color)] w-[72mm] print:shadow-none print:border-none print:w-full transition-all duration-500 print-content">
             <PrintableTicket ticket={ticket} />
           </div>
         </div>
